@@ -1,6 +1,6 @@
 Name:     openstack-clean-all
 Version:	1.2
-Release:	1%{?dist}
+Release:	2%{?dist}
 Summary:	Clean openstack resources 
 
 License:	GNU GPL
