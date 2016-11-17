@@ -14,10 +14,10 @@ from optparse import OptionParser
 
 def opt_parse():
         parser = OptionParser(version="%prog 1.2")
-        parser.add_option("-q",
-                          "--quite",
+        parser.add_option("-y",
+                          "--yes",
                           action="store_true",
-                          dest="quite",
+                          dest="yes",
                           default=False,
                           help="do not ask for confirmation during removal.   "
                           "                  "
@@ -46,8 +46,7 @@ def opt_parse():
         (options, args) = parser.parse_args()
         my_options = {
             "options":  {
-                "quite":  options.quite,
-                "all":    options.all,
+                "yes":  options.yes,
             }
         }
         return my_options
@@ -89,7 +88,7 @@ def query_yes_no(question, default="yes"):
     """
     in case -q parameter has been passed we will not ask any questions
     """
-    if options['options']['quite'] is True:
+    if options['options']['yes'] is True:
         return True
 
     valid = {"yes": True, "y": True, "ye": True,
