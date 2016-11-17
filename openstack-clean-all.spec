@@ -1,4 +1,4 @@
-Name:       openstack-clean-all
+Name:     openstack-clean-all
 Version:	1.2
 Release:	1%{?dist}
 Summary:	Clean openstack resources 
