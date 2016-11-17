@@ -70,7 +70,7 @@ def init_openstack_connection():
     neutronclient.Client(session=sess)
 
 
-def query_yes_no(question, default="yes", always_yes=""):
+def query_yes_no(question, default="yes"):
     """Ask a yes/no question via raw_input() and return their answer.
 
     "question" is a string that is presented to the user.
@@ -80,6 +80,7 @@ def query_yes_no(question, default="yes", always_yes=""):
 
     The "answer" return value is True for "yes" or False for "no".
     """
+    print options['options']['quite']
 
     valid = {"yes": True, "y": True, "ye": True,
              "no": False, "n": False}
@@ -268,8 +269,6 @@ def delete_keypair(nova):
 
 if __name__ == "__main__":
     options = opt_parse()
-    print options['options']['quite']
-    """
     nova, neutron = init_openstack_connection()
     delete_servers(nova)
     delete_floating_ips(neutron)
@@ -277,4 +276,3 @@ if __name__ == "__main__":
     delete_networks(neutron)
     delete_security_groups(neutron)
     delete_keypair(nova)
-    """
