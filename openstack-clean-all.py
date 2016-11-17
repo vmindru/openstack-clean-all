@@ -11,9 +11,12 @@ from novaclient import client as novaclient
 from neutronclient.v2_0 import client as neutronclient
 from optparse import OptionParser
 
+sys.tracebacklimit = 0
+
 
 def opt_parse():
-        parser = OptionParser(version="%prog 1.2")
+        usage = "usage: %prog [options]"
+        parser = OptionParser(version="%prog 1.2", usage=usage)
         parser.add_option("-y",
                           "--yes",
                           action="store_true",
@@ -56,23 +59,28 @@ def init_openstack_connection():
     """ init connection to openstack, requires valid ENV variables
     to auth, will return back nova and neutron Client
     """
-    API_VERSION = 2
-    AUTH_URL = os.environ['OS_AUTH_URL']
-    USERNAME = os.environ['OS_USERNAME']
-    PASSWORD = os.environ['OS_PASSWORD']
-    PROJECT_NAME = os.environ['OS_PROJECT_NAME']
-    loader = loading.get_plugin_loader('password')
-    auth = loader.load_from_options(auth_url=AUTH_URL,
-                                    username=USERNAME,
-                                    password=PASSWORD,
-                                    project_name=PROJECT_NAME)
-    sess = session.Session(auth=auth)
-
-    if USERNAME == "admin" or PROJECT_NAME == "admin":
-        sys.exit("do not run this command as ADMIN!!!!!")
-
-    return novaclient.Client(API_VERSION, session=sess),\
-        neutronclient.Client(session=sess)
+    if "OS_AUTH_URL" and \
+       "OS_USERNAME" and \
+       "OS_PASSWORD" and \
+       "OS_PROJECT_NAME" in os.environ:
+        API_VERSION = 2
+        AUTH_URL = os.environ.get('OS_AUTH_URL', 'PASS')
+        USERNAME = os.environ.get('OS_USERNAME', 'USER')
+        PASSWORD = os.environ.get('OS_PASSWORD', 'http://localhost:5000/v2.0/')
+        PROJECT_NAME = os.environ.get('OS_PROJECT_NAME', 'PROJECT')
+        loader = loading.get_plugin_loader('password')
+        auth = loader.load_from_options(auth_url=AUTH_URL,
+                                        username=USERNAME,
+                                        password=PASSWORD,
+                                        project_name=PROJECT_NAME)
+        sess = session.Session(auth=auth)
+        if USERNAME == "admin" or PROJECT_NAME == "admin":
+            sys.exit("do not run this command as ADMIN!!!!!")
+        return novaclient.Client(API_VERSION, session=sess),\
+            neutronclient.Client(session=sess)
+    else:
+        sys.exit('YOU MUST SET OS_AUTH_URL, OS_USERNAME, OS_PASSWORD\
+OS_PROJECT vars, same as for openstack client')
 
 
 def query_yes_no(question, default="yes"):
