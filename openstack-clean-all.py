@@ -24,12 +24,15 @@ def opt_parse():
                           "WARNING: this will remove all your resources"
                           " without confirmation, use with care!!!"
                           )
+        """
+        option to be implemented
         parser.add_option("-a",
                           "--all",
                           action="store_true",
                           dest="all",
                           default=True,
                           help="remoev all resources")
+        """
         """
         option to be implemented
         parser.add_option("-e",
@@ -51,6 +54,9 @@ def opt_parse():
 
 
 def init_openstack_connection():
+    """ init connection to openstack, requires valid ENV variables
+    to auth, will return back nova and neutron Client
+    """
     API_VERSION = 2
     AUTH_URL = os.environ['OS_AUTH_URL']
     USERNAME = os.environ['OS_USERNAME']
@@ -66,8 +72,8 @@ def init_openstack_connection():
     if USERNAME == "admin" or PROJECT_NAME == "admin":
         sys.exit("do not run this command as ADMIN!!!!!")
 
-    return novaclient.Client(API_VERSION, session=sess),
-    neutronclient.Client(session=sess)
+    return novaclient.Client(API_VERSION, session=sess),\
+        neutronclient.Client(session=sess)
 
 
 def query_yes_no(question, default="yes"):
@@ -80,7 +86,11 @@ def query_yes_no(question, default="yes"):
 
     The "answer" return value is True for "yes" or False for "no".
     """
-    print options['options']['quite']
+    """
+    in case -q parameter has been passed we will not ask any questions
+    """
+    if options['options']['quite'] is True:
+        return True
 
     valid = {"yes": True, "y": True, "ye": True,
              "no": False, "n": False}
@@ -270,6 +280,11 @@ def delete_keypair(nova):
 if __name__ == "__main__":
     options = opt_parse()
     nova, neutron = init_openstack_connection()
+    """ after -a option, and -e option will be implemented,
+    we will have to run separate cases.
+    case1:  remove alll
+    case2: remove specified resource
+    """
     delete_servers(nova)
     delete_floating_ips(neutron)
     delete_router(neutron)
