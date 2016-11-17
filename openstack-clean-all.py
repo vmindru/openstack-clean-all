@@ -25,11 +25,11 @@ def opt_parse():
                           default=True,
                           help="remoev all resources")
         parser.add_option("-n",
-                          "--network",
+                          "--element",
                           dest="network",
                           default=False,
-                          help="remove all user networks, not compatible"
-                          "with -a")
+                          help="remove specified resource, available options"
+                          "are\nuno")
         (options, args) = parser.parse_args()
         my_options = {
             "options":  {
@@ -101,7 +101,9 @@ def delete_servers(nova):
     """
 
     servers = nova.servers.list()
-    if query_yes_no("starting instance delete, will delete {} servers".format(len(servers))):
+    yes_no_msg = "starting instance delete, will delete {}"\
+        " servers".format(len(servers))
+    if query_yes_no(yes_no_msg):
         while servers != []:
             servers = nova.servers.list()
             for server in servers:
@@ -120,13 +122,16 @@ def delete_floating_ips(neutron):
     """
 
     floating_ips = neutron.list_floatingips()['floatingips']
-    if query_yes_no("starting floating IP delete, will delete {} ips".format(len(floating_ips))):
+    yes_no_msg = "starting floating IP delete, will delete {} ips"\
+        .format(len(floating_ips))
+    if query_yes_no(yes_no_msg):
         while floating_ips != []:
             floating_ips = neutron.list_floatingips()['floatingips']
             for flip in floating_ips:
                 flipid = flip['id']
                 neutron.delete_floatingip(flipid)
-            print "waiting, pending delete {} floatings".format(len(floating_ips))
+            print "waiting, pending delete {} floatings"\
+                .format(len(floating_ips))
             time.sleep(2)
             floating_ips = neutron.list_floatingips()['floatingips']
         return True
@@ -141,7 +146,9 @@ def delete_router(neutron):
     """
 
     routers = neutron.list_routers()['routers']
-    if query_yes_no("starting router delete, will delete {} routers".format(len(routers))):
+    yes_no_msg = "starting router delete, will delete {} routers"\
+        .format(len(routers))
+    if query_yes_no(yes_no_msg):
         while routers != []:
             routers = neutron.list_routers()['routers']
             for router in routers:
@@ -183,7 +190,9 @@ def delete_networks(neutron):
         return nets
 
     nets = __net_list()
-    if query_yes_no("starting net delete, will delete {} networks".format(len(nets))):
+    yes_no_msg = "starting net delete, will delete {} networks"\
+        .format(len(nets))
+    if query_yes_no(yes_no_msg):
         while len(nets) > 0:
             print "waiting, pending delete {} nets".format(len(nets))
             for net in nets:
@@ -202,15 +211,20 @@ def delete_security_groups(neutron):
     """
 
     security_groups = neutron.list_security_groups()['security_groups']
-    if query_yes_no("starting security group delete, will delete {} security groups".format(len(security_groups)-1)):
-        # there is always a default security group, we don't want to delet that one
+    yes_no_msg = "starting security group delete, will delete {} security groups"\
+        .format(len(security_groups)-1)
+    if query_yes_no(yes_no_msg):
+        # there is always a default security group, we don't want to delet that
+        # one
         while len(security_groups) != 1:
             for sc in security_groups:
-                # there is always a default security group, we don't want to delet that one
+                # there is always a default security group, we don't want to
+                # delet that one
                 if sc['name'] != "default":
                     neutron.delete_security_group(sc['id'])
 
-            print "waiting, pending delete {} security_groups".format(len(security_groups)-1)
+            print "waiting, pending delete {} security_groups"\
+                .format(len(security_groups)-1)
             time.sleep(2)
             security_groups = neutron.list_security_groups()['security_groups']
 
@@ -227,7 +241,9 @@ def delete_keypair(nova):
     """
 
     keypairs = nova.keypairs.list()
-    if query_yes_no("starting keypairs delete, will delete {} keypairs".format(len(keypairs))):
+    yes_no_msg = "starting keypairs delete, will delete {} keypairs"\
+        .format(len(keypairs))
+    if query_yes_no(yes_no_msg):
         while len(keypairs) != 0:
             for keypair in keypairs:
                 keypair_name = keypair._info['keypair']['name']
@@ -239,7 +255,7 @@ def delete_keypair(nova):
     else:
         return False
 
-
+"""
 nova, neutron = init_openstack_connection()
 delete_servers(nova)
 delete_floating_ips(neutron)
@@ -247,6 +263,6 @@ delete_router(neutron)
 delete_networks(neutron)
 delete_security_groups(neutron)
 delete_keypair(nova)
+"""
 
-
-
+opt_parse()
