@@ -9,6 +9,35 @@ from keystoneauth1 import loading
 from keystoneauth1 import session
 from novaclient import client as novaclient
 from neutronclient.v2_0 import client as neutronclient
+from optparse import OptionParser
+
+
+def opt_parse():
+        parser = OptionParser(version="%prog 1.2")
+        parser.add_option("-q",
+                          "--quite",
+                          dest="quite",
+                          default=False,
+                          help="do not ask for confirmation during removal")
+        parser.add_option("-a",
+                          "--all",
+                          dest="all",
+                          default=True,
+                          help="remoev all resources")
+        parser.add_option("-n",
+                          "--network",
+                          dest="network",
+                          default=False,
+                          help="remove all user networks, not compatible"
+                          "with -a")
+        (options, args) = parser.parse_args()
+        my_options = {
+            "options":  {
+                "quite":  options.quite,
+                "all":    options.all,
+            }
+        }
+        return my_options
 
 
 def init_openstack_connection():
@@ -212,10 +241,12 @@ def delete_keypair(nova):
 
 
 nova, neutron = init_openstack_connection()
-
 delete_servers(nova)
 delete_floating_ips(neutron)
 delete_router(neutron)
 delete_networks(neutron)
 delete_security_groups(neutron)
 delete_keypair(nova)
+
+
+
