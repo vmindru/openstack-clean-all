@@ -29,5 +29,10 @@ install -p -m 755 %{name}.py  %{buildroot}%{_bindir}/%{name}
 %{_bindir}/%{name}
 
 %changelog
-* Mon Oct 10 2016 Your Name <your@mail.addres>
+* Thu Nov 17 2016 Veaceslav Mindru <vmindru@redhat.com>
+- Refactored to PIP8
+- Added options 
+- Added -y option to be able to run from a script without
+  interactive actions 
+* Mon Oct 10 2016 Veaceslav Mindru <vmindru@redhat.com>
 - Initial Release
