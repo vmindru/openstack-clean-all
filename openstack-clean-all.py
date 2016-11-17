@@ -16,20 +16,30 @@ def opt_parse():
         parser = OptionParser(version="%prog 1.2")
         parser.add_option("-q",
                           "--quite",
+                          action="store_true",
                           dest="quite",
                           default=False,
-                          help="do not ask for confirmation during removal")
+                          help="do not ask for confirmation during removal.   "
+                          "                  "
+                          "WARNING: this will remove all your resources"
+                          " without confirmation, use with care!!!"
+                          )
         parser.add_option("-a",
                           "--all",
+                          action="store_true",
                           dest="all",
                           default=True,
                           help="remoev all resources")
-        parser.add_option("-n",
+        """
+        option to be implemented
+        parser.add_option("-e",
                           "--element",
-                          dest="network",
+                          dest="element",
                           default=False,
                           help="remove specified resource, available options"
-                          "are\nuno")
+                          " are: [network, instance, routers, ssh_key,"
+                          " security_groups]")
+        """
         (options, args) = parser.parse_args()
         my_options = {
             "options":  {
@@ -60,7 +70,7 @@ def init_openstack_connection():
     neutronclient.Client(session=sess)
 
 
-def query_yes_no(question, default="yes"):
+def query_yes_no(question, default="yes", always_yes=""):
     """Ask a yes/no question via raw_input() and return their answer.
 
     "question" is a string that is presented to the user.
@@ -255,14 +265,16 @@ def delete_keypair(nova):
     else:
         return False
 
-"""
-nova, neutron = init_openstack_connection()
-delete_servers(nova)
-delete_floating_ips(neutron)
-delete_router(neutron)
-delete_networks(neutron)
-delete_security_groups(neutron)
-delete_keypair(nova)
-"""
 
-opt_parse()
+if __name__ == "__main__":
+    options = opt_parse()
+    print options['options']['quite']
+    """
+    nova, neutron = init_openstack_connection()
+    delete_servers(nova)
+    delete_floating_ips(neutron)
+    delete_router(neutron)
+    delete_networks(neutron)
+    delete_security_groups(neutron)
+    delete_keypair(nova)
+    """
