@@ -1,12 +1,13 @@
 Name:     openstack-clean-all
-Version:	1.2
-Release:	2%{?dist}
+Version: 1.3
+Release:  1
 Summary:	Clean openstack resources 
 
 License:	GNU GPL
 URL:		https://github.com/vmindru/vmindru-scripts/tree/master/openstack
 Source0:    %{name}-%{version}.tar
 
+Requires: python-novaclient python-neutronclient
 BuildRequires: python-novaclient python-neutronclient
 BuildArch: noarch
 
@@ -29,6 +30,8 @@ install -p -m 755 %{name}.py  %{buildroot}%{_bindir}/%{name}
 %{_bindir}/%{name}
 
 %changelog
+* Mon Nov 21 2016 Veaceslav Mindru <vmindru@redhat.com>
+- Fix dependecy in spec file
 * Thu Nov 17 2016 Veaceslav Mindru <vmindru@redhat.com>
 - Refactored to PIP8
 - Added options 
