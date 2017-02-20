@@ -16,7 +16,7 @@ sys.tracebacklimit = 0
 
 def opt_parse():
         usage = "usage: %prog [options]"
-        parser = OptionParser(version="%prog 1.3", usage=usage)
+        parser = OptionParser(version="%prog 1.4", usage=usage)
         parser.add_option("-y",
                           "--yes",
                           action="store_true",
