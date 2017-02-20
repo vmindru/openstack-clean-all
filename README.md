@@ -48,4 +48,4 @@ Options:
 ```
 
 ## demo 
-[./osremove.gif]
+![./osremove.gif](./osremove.gif)
