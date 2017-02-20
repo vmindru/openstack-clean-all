@@ -34,7 +34,7 @@ def opt_parse():
                           action="store_true",
                           dest="all",
                           default=True,
-                          help="remoev all resources")
+                          help="remove all resources")
         """
         """
         option to be implemented
@@ -144,9 +144,9 @@ def delete_servers(nova):
 
 
 def delete_floating_ips(neutron):
-    """Delete all floating IP's
+    """Delete all floating ip addresses
        "nova" is an instance of novaclient.Client() from novaclient
-        returns true if succesful
+        returns true if successful
     """
 
     floating_ips = neutron.list_floatingips()['floatingips']
@@ -170,7 +170,7 @@ def delete_floating_ips(neutron):
 def delete_router(neutron):
     """ delete all routers
         "neutron" is an instance of neutronclient.Client(session=sess)
-        returns false if succesful
+        returns false if successful
     """
 
     routers = neutron.list_routers()['routers']
@@ -192,7 +192,7 @@ def delete_router(neutron):
                     # after gateway is removed , remove routers
                     neutron.delete_router(rt)
                 except ValueError:
-                    print "coudl not remote router {}".format(rt)
+                    print "could not remote router {}".format(rt)
                 print "removing routers, {} router left".format(len(routers))
                 time.sleep(2)
         return True
@@ -203,12 +203,12 @@ def delete_router(neutron):
 def delete_networks(neutron):
     """ delete neutron networks
         "neutron" is an instance of neutronclient.Client(session=sess)
-        returns false if succesful
+        returns false if successful
     """
 
-    """ openstck returns all networks including shared one when asked
-        for a list, we need to diferentiate public from private before
-        delete. createa  new array of networks and remove those.
+    """ openstack returns all networks including shared one when asked
+        for a list, we need to differentiate  public from private before
+        delete. create  new array of networks and remove those.
     """
     def __net_list():
         nets = []
@@ -235,19 +235,19 @@ def delete_networks(neutron):
 def delete_security_groups(neutron):
     """ delete security groups
         "neutron" is an instance of neutronclient.Client(session=sess)
-        returns false if succesful
+        returns false if successful
     """
 
     security_groups = neutron.list_security_groups()['security_groups']
     yes_no_msg = "starting security group delete, will delete {} security groups"\
         .format(len(security_groups)-1)
     if query_yes_no(yes_no_msg):
-        # there is always a default security group, we don't want to delet that
+        # there is always a default security group, we don't want to delete that
         # one
         while len(security_groups) != 1:
             for sc in security_groups:
                 # there is always a default security group, we don't want to
-                # delet that one
+                # delete that one
                 if sc['name'] != "default":
                     neutron.delete_security_group(sc['id'])
 
@@ -265,7 +265,7 @@ def delete_security_groups(neutron):
 def delete_keypair(nova):
     """ delete keypair
        "nova" is an instance of novaclient.Client() from novaclient
-        returns true if succesfull
+        returns true if successful
     """
 
     keypairs = nova.keypairs.list()
@@ -289,8 +289,8 @@ if __name__ == "__main__":
     nova, neutron = init_openstack_connection()
     """ after -a option, and -e option will be implemented,
     we will have to run separate cases.
-    case1:  remove alll
-    case2: remove specified resource
+    case 1:  remove all
+    case 2: remove specified resource
     """
     delete_servers(nova)
     delete_floating_ips(neutron)
