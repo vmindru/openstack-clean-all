@@ -3,7 +3,6 @@
 this tool will automatically remove opnestack resources
 of your tenant.
 openstack resources will be removed in following order.
-this tool will prevent you running this as user admin or under project amdin.
 
     - instances 
     - floating_ip
@@ -11,6 +10,8 @@ this tool will prevent you running this as user admin or under project amdin.
     - networks
     - security groups
     - keypairs
+
+this tool will prevent you running this as user admin or under project amdin.
 
 
 ## setup  
