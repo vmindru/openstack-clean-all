@@ -139,7 +139,14 @@ def delete_servers(nova):
         while servers != []:
             servers = nova.servers.list()
             for server in servers:
-                nova.servers.delete(server._info['id'])
+                try:
+                    nova.servers.delete(server._info['id'])
+                except:
+                    if server in nova.servers.list():
+                        print "something went wrong, we could not delte server"
+                    else:
+                        pass
+
             print "waiting, pending delete {} servers".format(len(servers))
             time.sleep(2)
         return True
