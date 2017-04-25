@@ -11,12 +11,12 @@ from novaclient import client as novaclient
 from neutronclient.v2_0 import client as neutronclient
 from optparse import OptionParser
 
-sys.tracebacklimit = 0
+# sys.tracebacklimit = 0
 
 
 def opt_parse():
         usage = "usage: %prog [options]"
-        parser = OptionParser(version="%prog 1.4", usage=usage)
+        parser = OptionParser(version="%prog 1.5", usage=usage)
         parser.add_option("-y",
                           "--yes",
                           action="store_true",
@@ -27,6 +27,7 @@ def opt_parse():
                           "WARNING: this will remove all your resources"
                           " without confirmation, use with care!!!"
                           )
+
         """
         option to be implemented
         parser.add_option("-a",
@@ -36,20 +37,22 @@ def opt_parse():
                           default=True,
                           help="remove all resources")
         """
-        """
-        option to be implemented
         parser.add_option("-e",
                           "--element",
                           dest="element",
-                          default=False,
+                          default="all",
                           help="remove specified resource, available options"
-                          " are: [network, instance, routers, ssh_key,"
-                          " security_groups]")
-        """
+                          " are: [servers,floating_ips,routers,networks,"
+                          "security_groups,keypairs,all]",
+                          choices=["servers", "floating_ips", "routers",
+                                   "networks", "security_groups", "keypairs",
+                                   "all"]
+                          )
         (options, args) = parser.parse_args()
         my_options = {
             "options":  {
                 "yes":  options.yes,
+                "element": options.element
             }
         }
         return my_options
@@ -284,17 +287,50 @@ def delete_keypair(nova):
         return False
 
 
-if __name__ == "__main__":
-    options = opt_parse()
-    nova, neutron = init_openstack_connection()
-    """ after -a option, and -e option will be implemented,
-    we will have to run separate cases.
-    case 1:  remove all
-    case 2: remove specified resource
-    """
+def delete_all(options, nova, neutron):
     delete_servers(nova)
     delete_floating_ips(neutron)
     delete_router(neutron)
     delete_networks(neutron)
     delete_security_groups(neutron)
     delete_keypair(nova)
+
+
+def main(options):
+    nova, neutron = init_openstack_connection()
+    if options['options']['element'] == "all":
+        delete_all(options, nova, neutron)
+    elif options['options']['element'] == "servers":
+        delete_servers(nova)
+    elif options['options']['element'] == "floating_ips":
+        delete_servers(nova)
+        delete_floating_ips(neutron)
+    elif options['options']['element'] == "routers":
+        delete_servers(nova)
+        delete_floating_ips(neutron)
+        delete_router(neutron)
+    elif options['options']['element'] == "networks":
+        delete_servers(nova)
+        delete_floating_ips(neutron)
+        delete_router(neutron)
+        delete_networks(neutron)
+    elif options['options']['element'] == "security_groups":
+        delete_servers(nova)
+        delete_floating_ips(neutron)
+        delete_router(neutron)
+        delete_networks(neutron)
+        delete_security_groups(neutron)
+    elif options['options']['element'] == "keypairs":
+        delete_servers(nova)
+        delete_floating_ips(neutron)
+        delete_router(neutron)
+        delete_networks(neutron)
+        delete_security_groups(neutron)
+        delete_keypair(nova)
+    else:
+        print "something went wrong we should not endup here"
+
+
+if __name__ == "__main__":
+    options = opt_parse()
+    main(options)

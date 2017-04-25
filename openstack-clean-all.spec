@@ -1,5 +1,5 @@
 Name:     openstack-clean-all
-Version: 1.4
+Version: 1.5
 Release:  1
 Summary:	Clean openstack resources 
 
