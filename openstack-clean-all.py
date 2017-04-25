@@ -43,7 +43,8 @@ def opt_parse():
                           default="all",
                           help="remove specified resource, available options"
                           " are: [servers,floating_ips,routers,networks,"
-                          "security_groups,keypairs,all]",
+                          "security_groups,keypairs,all]. WARNING: will remove"
+                          " all dependecides as well",
                           choices=["servers", "floating_ips", "routers",
                                    "networks", "security_groups", "keypairs",
                                    "all"]
