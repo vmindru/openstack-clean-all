@@ -1,3 +1,7 @@
+# DEPRECATED
+
+this tools is deprecated, please use the offficail OpenStack tool https://github.com/openstack/ospurge/tree/master/ospurge 
+
 # openstack-cleanall
 
 this tool will automatically remove opnestack resources
